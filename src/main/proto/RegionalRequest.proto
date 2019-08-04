@@ -8,7 +8,7 @@ message DescribeRegionRequest {
         string id = 1;
         string urlKey = 2;
     }
-//    QueryConfig config = 3;
+    QueryConfig config = 3;
 }
 
 message DescribeRegionResponse {
@@ -23,8 +23,8 @@ message DescribeRegionResponse {
     }
 
     message Success {
-//        RegionInfo regionInfo = 1;
-//        repeated PostHead topPosts = 2;
+        RegionInfo regionInfo = 1;
+        repeated PostHead topPosts = 2;
         string queryMark = 3;
     }
 }
