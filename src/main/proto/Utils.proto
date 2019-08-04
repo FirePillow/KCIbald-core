@@ -1,0 +1,53 @@
+syntax = "proto3";
+package com.kcibald.services.core.proto;
+
+message QueryConfig {
+    string marker = 1;
+    int32 amount = 2;
+    int32 skip = 3;
+}
+
+message RegionInfo {
+    string id = 1;
+    string urlKey = 2;
+    string name = 3;
+    RegionInfo parent = 4;
+    string description = 5;
+    string avatar = 6;
+    string color_left = 7;
+    string color_right = 8;
+    repeated RegionInfo children = 9;
+}
+
+message PostHead {
+    string urlKey = 1;
+    string title = 2;
+    string author = 3;
+    int64 creationTimeStamp = 4;
+    string content = 5;
+    int32 commentCount = 6;
+}
+
+message PostInfo {
+    string urlKey = 1;
+    string title = 2;
+    string author = 3;
+    int64 creationTimeStamp = 4;
+    string content = 5;
+    int32 commentCount = 6;
+    repeated NamedAttachment attachments = 7;
+}
+
+message CommentInfo {
+    int32 id = 1;
+    string author = 2;
+    int64 creationTimeStamp = 3;
+    string content = 4;
+    repeated CommentInfo replies = 5;
+    repeated NamedAttachment attachments = 6;
+}
+
+message NamedAttachment {
+    string url = 1;
+    string title = 2;
+}

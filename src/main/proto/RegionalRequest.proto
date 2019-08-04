@@ -1,0 +1,31 @@
+syntax = "proto3";
+package com.kcibald.services.core.proto;
+
+import "Utils.proto";
+
+message DescribeRegionRequest {
+    oneof Key {
+        string id = 1;
+        string urlKey = 2;
+    }
+//    QueryConfig config = 3;
+}
+
+message DescribeRegionResponse {
+    oneof ResponseType {
+        Success success = 1;
+        Failure failure = 2;
+    }
+
+    enum Failure {
+        NOT_FOUND = 0;
+        ERROR = 1;
+    }
+
+    message Success {
+//        RegionInfo regionInfo = 1;
+//        repeated PostHead topPosts = 2;
+        string queryMark = 3;
+    }
+}
+
