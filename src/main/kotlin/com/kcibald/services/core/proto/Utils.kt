@@ -1,5 +1,18 @@
 package com.kcibald.services.core.proto
 
+data class Failure(override val value: Int) : pbandk.Message.Enum {
+    companion object : pbandk.Message.Enum.Companion<Failure> {
+        val NOT_FOUND = Failure(0)
+        val ERROR = Failure(1)
+
+        override fun fromValue(value: Int) = when (value) {
+            0 -> NOT_FOUND
+            1 -> ERROR
+            else -> Failure(value)
+        }
+    }
+}
+
 data class QueryConfig(
     val marker: String = "",
     val amount: Int = 0,

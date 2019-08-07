@@ -5,7 +5,7 @@ import com.kcibald.services.core.proto.PostHead
 import com.kcibald.services.core.proto.PostInfo
 import com.kcibald.services.core.proto.QueryConfig
 
-interface PostService {
+interface PostService : Service {
 
     suspend fun getPostHeadsUnderRegion(regionId: String, queryConfig: QueryConfig): QueryResults<PostHead>?
 

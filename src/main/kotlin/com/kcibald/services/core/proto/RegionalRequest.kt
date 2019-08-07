@@ -24,7 +24,11 @@ data class DescribeRegionResponse(
 ) : pbandk.Message<DescribeRegionResponse> {
     sealed class ResponseType {
         data class Success(val success: com.kcibald.services.core.proto.DescribeRegionResponse.Success) : ResponseType()
-        data class Failure(val failure: com.kcibald.services.core.proto.DescribeRegionResponse.Failure = com.kcibald.services.core.proto.DescribeRegionResponse.Failure.fromValue(0)) : ResponseType()
+        data class Failure(
+            val failure: com.kcibald.services.core.proto.Failure = com.kcibald.services.core.proto.Failure.fromValue(
+                0
+            )
+        ) : ResponseType()
     }
 
     override operator fun plus(other: DescribeRegionResponse?) = protoMergeImpl(other)
@@ -32,19 +36,6 @@ data class DescribeRegionResponse(
     override fun protoMarshal(m: pbandk.Marshaller) = protoMarshalImpl(m)
     companion object : pbandk.Message.Companion<DescribeRegionResponse> {
         override fun protoUnmarshal(u: pbandk.Unmarshaller) = DescribeRegionResponse.protoUnmarshalImpl(u)
-    }
-
-    data class Failure(override val value: Int) : pbandk.Message.Enum {
-        companion object : pbandk.Message.Enum.Companion<Failure> {
-            val NOT_FOUND = Failure(0)
-            val ERROR = Failure(1)
-
-            override fun fromValue(value: Int) = when (value) {
-                0 -> NOT_FOUND
-                1 -> ERROR
-                else -> Failure(value)
-            }
-        }
     }
 
     data class Success(
@@ -129,7 +120,8 @@ private fun DescribeRegionResponse.Companion.protoUnmarshalImpl(protoUnmarshal: 
     while (true) when (protoUnmarshal.readTag()) {
         0 -> return DescribeRegionResponse(responseType, protoUnmarshal.unknownFields())
         10 -> responseType = DescribeRegionResponse.ResponseType.Success(protoUnmarshal.readMessage(com.kcibald.services.core.proto.DescribeRegionResponse.Success.Companion))
-        16 -> responseType = DescribeRegionResponse.ResponseType.Failure(protoUnmarshal.readEnum(com.kcibald.services.core.proto.DescribeRegionResponse.Failure.Companion))
+        16 -> responseType =
+            DescribeRegionResponse.ResponseType.Failure(protoUnmarshal.readEnum(com.kcibald.services.core.proto.Failure.Companion))
         else -> protoUnmarshal.unknownField()
     }
 }

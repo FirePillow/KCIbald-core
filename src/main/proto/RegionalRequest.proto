@@ -17,11 +17,6 @@ message DescribeRegionResponse {
         Failure failure = 2;
     }
 
-    enum Failure {
-        NOT_FOUND = 0;
-        ERROR = 1;
-    }
-
     message Success {
         RegionInfo regionInfo = 1;
         repeated PostHead topPosts = 2;
