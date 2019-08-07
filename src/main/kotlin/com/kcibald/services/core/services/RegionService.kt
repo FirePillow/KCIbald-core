@@ -7,6 +7,6 @@ interface RegionService: Service {
 
     suspend fun getRegionById(id: String): RegionInfo?
     suspend fun getRegionByUrlKey(urlKey: URLKey): RegionInfo?
-    suspend fun translateURLKeyToId(): String?
+    suspend fun translateURLKeyToId(urlKey: URLKey): String?
 
 }

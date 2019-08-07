@@ -27,7 +27,7 @@ internal class DescribeRegionInterfaceTest {
             throw AssertionError()
         }
 
-        override suspend fun translateURLKeyToId(): String? = ""
+        override suspend fun translateURLKeyToId(urlKey: URLKey): String? = ""
 
         override suspend fun start() {}
 
@@ -366,7 +366,10 @@ internal class DescribeRegionInterfaceTest {
             val isRegionServiceStarted: Boolean,
             val isPostServiceStarted: Boolean
         )
-        assertEquals(State(true, true), State(isRegionServiceStarted, isPostServiceStarted))
+        assertEquals(
+            State(isRegionServiceStarted = true, isPostServiceStarted = true),
+            State(isRegionServiceStarted, isPostServiceStarted)
+        )
     }
 
     @Test
