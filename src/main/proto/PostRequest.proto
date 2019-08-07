@@ -1,0 +1,32 @@
+syntax = "proto3";
+package com.kcibald.services.core.proto;
+
+import "Utils.proto";
+
+message DescribePostRequest {
+    oneof region {
+        string rId = 1;
+        string rUrlKey = 2;
+    }
+    oneof post {
+        string pId = 3;
+        string pUrlKey = 4;
+    }
+    QueryConfig queryConfig = 5;
+}
+
+message DescribePostResponse {
+    oneof ResponseType {
+        Success success = 1;
+        Failure failure = 2;
+    }
+
+    message Success {
+        repeated PostHead postHeads = 1;
+    }
+
+    enum Failure {
+        NOT_FOUND = 0;
+        ERROR = 1;
+    }
+}
