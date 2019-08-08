@@ -23,7 +23,8 @@ message DescribePostResponse {
 
     message Success {
         PostInfo postInfo = 1;
-        repeated CommentInfo comment = 2;
+        string queryMark = 2;
+        repeated CommentInfo comment = 3;
     }
 
     enum Failure {

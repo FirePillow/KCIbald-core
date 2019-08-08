@@ -59,6 +59,7 @@ data class DescribePostResponse(
 
     data class Success(
         val postInfo: com.kcibald.services.core.proto.PostInfo? = null,
+        val queryMark: String = "",
         val comment: List<com.kcibald.services.core.proto.CommentInfo> = emptyList(),
         val unknownFields: Map<Int, pbandk.UnknownField> = emptyMap()
     ) : pbandk.Message<Success> {
@@ -169,28 +170,33 @@ private fun DescribePostResponse.Success.protoMergeImpl(plus: DescribePostRespon
 private fun DescribePostResponse.Success.protoSizeImpl(): Int {
     var protoSize = 0
     if (postInfo != null) protoSize += pbandk.Sizer.tagSize(1) + pbandk.Sizer.messageSize(postInfo)
-    if (comment.isNotEmpty()) protoSize += (pbandk.Sizer.tagSize(2) * comment.size) + comment.sumBy(pbandk.Sizer::messageSize)
+    if (queryMark.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(2) + pbandk.Sizer.stringSize(queryMark)
+    if (comment.isNotEmpty()) protoSize += (pbandk.Sizer.tagSize(3) * comment.size) + comment.sumBy(pbandk.Sizer::messageSize)
     protoSize += unknownFields.entries.sumBy { it.value.size() }
     return protoSize
 }
 
 private fun DescribePostResponse.Success.protoMarshalImpl(protoMarshal: pbandk.Marshaller) {
     if (postInfo != null) protoMarshal.writeTag(10).writeMessage(postInfo)
-    if (comment.isNotEmpty()) comment.forEach { protoMarshal.writeTag(18).writeMessage(it) }
+    if (queryMark.isNotEmpty()) protoMarshal.writeTag(18).writeString(queryMark)
+    if (comment.isNotEmpty()) comment.forEach { protoMarshal.writeTag(26).writeMessage(it) }
     if (unknownFields.isNotEmpty()) protoMarshal.writeUnknownFields(unknownFields)
 }
 
 private fun DescribePostResponse.Success.Companion.protoUnmarshalImpl(protoUnmarshal: pbandk.Unmarshaller): DescribePostResponse.Success {
     var postInfo: com.kcibald.services.core.proto.PostInfo? = null
+    var queryMark = ""
     var comment: pbandk.ListWithSize.Builder<com.kcibald.services.core.proto.CommentInfo>? = null
     while (true) when (protoUnmarshal.readTag()) {
         0 -> return DescribePostResponse.Success(
             postInfo,
+            queryMark,
             pbandk.ListWithSize.Builder.fixed(comment),
             protoUnmarshal.unknownFields()
         )
         10 -> postInfo = protoUnmarshal.readMessage(com.kcibald.services.core.proto.PostInfo.Companion)
-        18 -> comment =
+        18 -> queryMark = protoUnmarshal.readString()
+        26 -> comment =
             protoUnmarshal.readRepeatedMessage(comment, com.kcibald.services.core.proto.CommentInfo.Companion, true)
         else -> protoUnmarshal.unknownField()
     }
