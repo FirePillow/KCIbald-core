@@ -23,7 +23,7 @@ message DescribePostResponse {
 
     message Success {
         RegionInfo regionInfo = 1;
-        repeated PostHead postHeads = 2;
+        repeated CommentInfo comment = 2;
     }
 
     enum Failure {
