@@ -65,6 +65,7 @@ data class PostHead(
 }
 
 data class PostInfo(
+    val id: String = "",
     val urlKey: String = "",
     val title: String = "",
     val author: String = "",
@@ -259,29 +260,32 @@ private fun PostInfo.protoMergeImpl(plus: PostInfo?): PostInfo = plus?.copy(
 
 private fun PostInfo.protoSizeImpl(): Int {
     var protoSize = 0
-    if (urlKey.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(1) + pbandk.Sizer.stringSize(urlKey)
-    if (title.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(2) + pbandk.Sizer.stringSize(title)
-    if (author.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(3) + pbandk.Sizer.stringSize(author)
-    if (creationTimeStamp != 0L) protoSize += pbandk.Sizer.tagSize(4) + pbandk.Sizer.int64Size(creationTimeStamp)
-    if (content.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(5) + pbandk.Sizer.stringSize(content)
-    if (commentCount != 0) protoSize += pbandk.Sizer.tagSize(6) + pbandk.Sizer.int32Size(commentCount)
-    if (attachments.isNotEmpty()) protoSize += (pbandk.Sizer.tagSize(7) * attachments.size) + attachments.sumBy(pbandk.Sizer::messageSize)
+    if (id.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(1) + pbandk.Sizer.stringSize(id)
+    if (urlKey.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(2) + pbandk.Sizer.stringSize(urlKey)
+    if (title.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(3) + pbandk.Sizer.stringSize(title)
+    if (author.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(4) + pbandk.Sizer.stringSize(author)
+    if (creationTimeStamp != 0L) protoSize += pbandk.Sizer.tagSize(5) + pbandk.Sizer.int64Size(creationTimeStamp)
+    if (content.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(6) + pbandk.Sizer.stringSize(content)
+    if (commentCount != 0) protoSize += pbandk.Sizer.tagSize(7) + pbandk.Sizer.int32Size(commentCount)
+    if (attachments.isNotEmpty()) protoSize += (pbandk.Sizer.tagSize(8) * attachments.size) + attachments.sumBy(pbandk.Sizer::messageSize)
     protoSize += unknownFields.entries.sumBy { it.value.size() }
     return protoSize
 }
 
 private fun PostInfo.protoMarshalImpl(protoMarshal: pbandk.Marshaller) {
-    if (urlKey.isNotEmpty()) protoMarshal.writeTag(10).writeString(urlKey)
-    if (title.isNotEmpty()) protoMarshal.writeTag(18).writeString(title)
-    if (author.isNotEmpty()) protoMarshal.writeTag(26).writeString(author)
-    if (creationTimeStamp != 0L) protoMarshal.writeTag(32).writeInt64(creationTimeStamp)
-    if (content.isNotEmpty()) protoMarshal.writeTag(42).writeString(content)
-    if (commentCount != 0) protoMarshal.writeTag(48).writeInt32(commentCount)
-    if (attachments.isNotEmpty()) attachments.forEach { protoMarshal.writeTag(58).writeMessage(it) }
+    if (id.isNotEmpty()) protoMarshal.writeTag(10).writeString(id)
+    if (urlKey.isNotEmpty()) protoMarshal.writeTag(18).writeString(urlKey)
+    if (title.isNotEmpty()) protoMarshal.writeTag(26).writeString(title)
+    if (author.isNotEmpty()) protoMarshal.writeTag(34).writeString(author)
+    if (creationTimeStamp != 0L) protoMarshal.writeTag(40).writeInt64(creationTimeStamp)
+    if (content.isNotEmpty()) protoMarshal.writeTag(50).writeString(content)
+    if (commentCount != 0) protoMarshal.writeTag(56).writeInt32(commentCount)
+    if (attachments.isNotEmpty()) attachments.forEach { protoMarshal.writeTag(66).writeMessage(it) }
     if (unknownFields.isNotEmpty()) protoMarshal.writeUnknownFields(unknownFields)
 }
 
 private fun PostInfo.Companion.protoUnmarshalImpl(protoUnmarshal: pbandk.Unmarshaller): PostInfo {
+    var id = ""
     var urlKey = ""
     var title = ""
     var author = ""
@@ -290,15 +294,29 @@ private fun PostInfo.Companion.protoUnmarshalImpl(protoUnmarshal: pbandk.Unmarsh
     var commentCount = 0
     var attachments: pbandk.ListWithSize.Builder<com.kcibald.services.core.proto.NamedAttachment>? = null
     while (true) when (protoUnmarshal.readTag()) {
-        0 -> return PostInfo(urlKey, title, author, creationTimeStamp,
-            content, commentCount, pbandk.ListWithSize.Builder.fixed(attachments), protoUnmarshal.unknownFields())
-        10 -> urlKey = protoUnmarshal.readString()
-        18 -> title = protoUnmarshal.readString()
-        26 -> author = protoUnmarshal.readString()
-        32 -> creationTimeStamp = protoUnmarshal.readInt64()
-        42 -> content = protoUnmarshal.readString()
-        48 -> commentCount = protoUnmarshal.readInt32()
-        58 -> attachments = protoUnmarshal.readRepeatedMessage(attachments, com.kcibald.services.core.proto.NamedAttachment.Companion, true)
+        0 -> return PostInfo(
+            id,
+            urlKey,
+            title,
+            author,
+            creationTimeStamp,
+            content,
+            commentCount,
+            pbandk.ListWithSize.Builder.fixed(attachments),
+            protoUnmarshal.unknownFields()
+        )
+        10 -> id = protoUnmarshal.readString()
+        18 -> urlKey = protoUnmarshal.readString()
+        26 -> title = protoUnmarshal.readString()
+        34 -> author = protoUnmarshal.readString()
+        40 -> creationTimeStamp = protoUnmarshal.readInt64()
+        50 -> content = protoUnmarshal.readString()
+        56 -> commentCount = protoUnmarshal.readInt32()
+        66 -> attachments = protoUnmarshal.readRepeatedMessage(
+            attachments,
+            com.kcibald.services.core.proto.NamedAttachment.Companion,
+            true
+        )
         else -> protoUnmarshal.unknownField()
     }
 }
