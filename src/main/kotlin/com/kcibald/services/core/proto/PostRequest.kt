@@ -19,7 +19,6 @@ data class DescribePostRequest(
     override operator fun plus(other: DescribePostRequest?) = protoMergeImpl(other)
     override val protoSize by lazy { protoSizeImpl() }
     override fun protoMarshal(m: pbandk.Marshaller) = protoMarshalImpl(m)
-
     companion object : pbandk.Message.Companion<DescribePostRequest> {
         override fun protoUnmarshal(u: pbandk.Unmarshaller) = DescribePostRequest.protoUnmarshalImpl(u)
     }
@@ -41,7 +40,6 @@ data class DescribePostResponse(
     override operator fun plus(other: DescribePostResponse?) = protoMergeImpl(other)
     override val protoSize by lazy { protoSizeImpl() }
     override fun protoMarshal(m: pbandk.Marshaller) = protoMarshalImpl(m)
-
     companion object : pbandk.Message.Companion<DescribePostResponse> {
         override fun protoUnmarshal(u: pbandk.Unmarshaller) = DescribePostResponse.protoUnmarshalImpl(u)
     }
@@ -60,13 +58,13 @@ data class DescribePostResponse(
     }
 
     data class Success(
-        val postHeads: List<com.kcibald.services.core.proto.PostHead> = emptyList(),
+        val postInfo: com.kcibald.services.core.proto.PostInfo? = null,
+        val comment: List<com.kcibald.services.core.proto.CommentInfo> = emptyList(),
         val unknownFields: Map<Int, pbandk.UnknownField> = emptyMap()
     ) : pbandk.Message<Success> {
         override operator fun plus(other: Success?) = protoMergeImpl(other)
         override val protoSize by lazy { protoSizeImpl() }
         override fun protoMarshal(m: pbandk.Marshaller) = protoMarshalImpl(m)
-
         companion object : pbandk.Message.Companion<Success> {
             override fun protoUnmarshal(u: pbandk.Unmarshaller) = Success.protoUnmarshalImpl(u)
         }
@@ -163,31 +161,37 @@ private fun DescribePostResponse.Companion.protoUnmarshalImpl(protoUnmarshal: pb
 
 private fun DescribePostResponse.Success.protoMergeImpl(plus: DescribePostResponse.Success?): DescribePostResponse.Success =
     plus?.copy(
-        postHeads = postHeads + plus.postHeads,
+        postInfo = postInfo?.plus(plus.postInfo) ?: plus.postInfo,
+        comment = comment + plus.comment,
         unknownFields = unknownFields + plus.unknownFields
     ) ?: this
 
 private fun DescribePostResponse.Success.protoSizeImpl(): Int {
     var protoSize = 0
-    if (postHeads.isNotEmpty()) protoSize += (pbandk.Sizer.tagSize(1) * postHeads.size) + postHeads.sumBy(pbandk.Sizer::messageSize)
+    if (postInfo != null) protoSize += pbandk.Sizer.tagSize(1) + pbandk.Sizer.messageSize(postInfo)
+    if (comment.isNotEmpty()) protoSize += (pbandk.Sizer.tagSize(2) * comment.size) + comment.sumBy(pbandk.Sizer::messageSize)
     protoSize += unknownFields.entries.sumBy { it.value.size() }
     return protoSize
 }
 
 private fun DescribePostResponse.Success.protoMarshalImpl(protoMarshal: pbandk.Marshaller) {
-    if (postHeads.isNotEmpty()) postHeads.forEach { protoMarshal.writeTag(10).writeMessage(it) }
+    if (postInfo != null) protoMarshal.writeTag(10).writeMessage(postInfo)
+    if (comment.isNotEmpty()) comment.forEach { protoMarshal.writeTag(18).writeMessage(it) }
     if (unknownFields.isNotEmpty()) protoMarshal.writeUnknownFields(unknownFields)
 }
 
 private fun DescribePostResponse.Success.Companion.protoUnmarshalImpl(protoUnmarshal: pbandk.Unmarshaller): DescribePostResponse.Success {
-    var postHeads: pbandk.ListWithSize.Builder<com.kcibald.services.core.proto.PostHead>? = null
+    var postInfo: com.kcibald.services.core.proto.PostInfo? = null
+    var comment: pbandk.ListWithSize.Builder<com.kcibald.services.core.proto.CommentInfo>? = null
     while (true) when (protoUnmarshal.readTag()) {
         0 -> return DescribePostResponse.Success(
-            pbandk.ListWithSize.Builder.fixed(postHeads),
+            postInfo,
+            pbandk.ListWithSize.Builder.fixed(comment),
             protoUnmarshal.unknownFields()
         )
-        10 -> postHeads =
-            protoUnmarshal.readRepeatedMessage(postHeads, com.kcibald.services.core.proto.PostHead.Companion, true)
+        10 -> postInfo = protoUnmarshal.readMessage(com.kcibald.services.core.proto.PostInfo.Companion)
+        18 -> comment =
+            protoUnmarshal.readRepeatedMessage(comment, com.kcibald.services.core.proto.CommentInfo.Companion, true)
         else -> protoUnmarshal.unknownField()
     }
 }
