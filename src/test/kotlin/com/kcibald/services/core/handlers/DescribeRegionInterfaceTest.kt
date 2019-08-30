@@ -2,8 +2,6 @@ package com.kcibald.services.core.handlers
 
 import com.kcibald.services.core.QueryResults
 import com.kcibald.services.core.proto.*
-import com.kcibald.services.core.services.PostService
-import com.kcibald.services.core.services.RegionService
 import com.kcibald.services.kcibald.URLKey
 import io.vertx.core.Vertx
 import io.vertx.junit5.VertxExtension
@@ -17,39 +15,6 @@ import java.time.ZoneOffset
 
 @ExtendWith(VertxExtension::class)
 internal class DescribeRegionInterfaceTest {
-
-    open class TestRegionService : RegionService {
-        override suspend fun getRegionById(id: String): RegionInfo? {
-            throw AssertionError()
-        }
-
-        override suspend fun getRegionByUrlKey(urlKey: URLKey): RegionInfo? {
-            throw AssertionError()
-        }
-
-        override suspend fun translateURLKeyToId(urlKey: URLKey): String? = ""
-
-        override suspend fun start() {}
-
-        override suspend fun stop() {}
-    }
-
-    open class TestPostService : PostService {
-        override suspend fun getPostHeadsUnderRegion(
-            regionId: String,
-            queryConfig: QueryConfig
-        ): QueryResults<PostHead>? {
-            throw AssertionError()
-        }
-
-        override suspend fun getPostsUnderRegion(regionId: String, queryConfig: QueryConfig): QueryResults<PostInfo>? {
-            throw AssertionError()
-        }
-
-        override suspend fun start() {}
-
-        override suspend fun stop() {}
-    }
 
     @Test
     fun query_id_no_posts(vertx: Vertx) = runBlocking {
