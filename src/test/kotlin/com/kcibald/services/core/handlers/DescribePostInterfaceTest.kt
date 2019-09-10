@@ -4,6 +4,8 @@ import com.kcibald.services.core.QueryResults
 import com.kcibald.services.core.proto.*
 import com.kcibald.services.kcibald.URLKey
 import io.vertx.core.Vertx
+import io.vertx.core.eventbus.Message
+import io.vertx.core.eventbus.impl.MessageImpl
 import io.vertx.junit5.VertxExtension
 import io.vertx.kotlin.core.eventbus.requestAwait
 import kotlinx.coroutines.runBlocking
@@ -315,5 +317,24 @@ internal class DescribePostInterfaceTest {
         assertEquals(postInfo, success.postInfo)
 
         Unit
+    }
+
+    @Test
+    fun errorResultSupplier(vertx: Vertx) = runBlocking {
+        @Suppress("UNCHECKED_CAST")
+        assertEquals(
+            DescribePostInterface.errorResult,
+            DescribePostInterface.errorResultSupplier(
+                DescribePostInterface(
+                    vertx,
+                    "balah",
+                    TestRegionService(),
+                    TestPostService(),
+                    TestCommentService()
+                ),
+                MessageImpl<ByteArray, Unit>() as Message<ByteArray>,
+                Throwable()
+            )
+        )
     }
 }

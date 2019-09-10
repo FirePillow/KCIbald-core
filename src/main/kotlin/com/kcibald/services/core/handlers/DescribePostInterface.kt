@@ -19,7 +19,7 @@ class DescribePostInterface(
     private val regionService: RegionService,
     private val postService: PostService,
     private val commentService: CommentService
-) : ServiceInterface<ByteArray>(vertx, eventbusAddress, errorResult) {
+) : ServiceInterface<ByteArray>(vertx, eventbusAddress, errorResultSupplier) {
 
     override suspend fun handle(message: Message<ByteArray>): EventResult {
         val describePostRequest = DescribePostRequest.protoUnmarshal(message.body())
@@ -68,10 +68,18 @@ class DescribePostInterface(
     )
 
     companion object {
-        private val errorResult = ProtobufEventResult(
+
+        internal val errorResultSupplier:
+                suspend ServiceInterface<ByteArray>.(Message<ByteArray>, Throwable) -> EventResult? =
+            { _, _ ->
+                errorResult
+            }
+
+        internal val errorResult = ProtobufEventResult(
             DescribePostResponse(
                 ResponseType.Failure(DescribePostResponse.Failure.ERROR)
             )
         )
+
     }
 }

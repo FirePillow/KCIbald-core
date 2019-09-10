@@ -17,7 +17,7 @@ class DescribeRegionInterface(
     eventbusAddress: String,
     private val regionService: RegionService,
     private val postService: PostService
-) : ServiceInterface<ByteArray>(vertx, eventbusAddress, errorEventResult) {
+) : ServiceInterface<ByteArray>(vertx, eventbusAddress, errorResultSupplier) {
 
     override suspend fun handle(message: Message<ByteArray>): EventResult {
         val request = DescribeRegionRequest.protoUnmarshal(message.body())
@@ -47,7 +47,7 @@ class DescribeRegionInterface(
 
         if (postHeads == null) {
             logger.w { "Possible data structure corruption! region $regionInfo can not find associated post heads" }
-            return errorEventResult
+            return errorResult
         }
 
         return ProtobufEventResult(
@@ -80,11 +80,19 @@ class DescribeRegionInterface(
     )
 
     companion object {
-        private val errorEventResult = ProtobufEventResult(
+
+        private val errorResultSupplier:
+                suspend ServiceInterface<ByteArray>.(Message<ByteArray>, Throwable) -> EventResult? =
+            { _, _ ->
+                errorResult
+            }
+
+        private val errorResult = ProtobufEventResult(
             DescribeRegionResponse(
                 DescribeRegionResponse.ResponseType.Failure(Failure.ERROR)
             )
         )
+
     }
 
 }
