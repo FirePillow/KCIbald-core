@@ -13,6 +13,10 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
+    - name: Setup dockerize
+      uses: zcong1993/setup-dockerize@v1.2.0
+    - name: Run mongoDB
+      run: docker run -p 27017:27017 mongo
     - name: Build with Gradle
       run: ./gradlew build
     - name: Test with Gradle
