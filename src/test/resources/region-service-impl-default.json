@@ -1,0 +1,7 @@
+{
+  "region": {
+    "mongo_config": {},
+    "collection_name": "lol",
+    "eventbus_address": "eventbus"
+  }
+}
