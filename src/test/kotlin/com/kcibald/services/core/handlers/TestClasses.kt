@@ -33,10 +33,6 @@ internal open class TestPostService : PostService {
         throw AssertionError()
     }
 
-    override suspend fun getPostsUnderRegion(regionId: String, queryConfig: QueryConfig): QueryResults<PostInfo>? {
-        throw AssertionError()
-    }
-
     override suspend fun start() {}
 
     override suspend fun stop() {}

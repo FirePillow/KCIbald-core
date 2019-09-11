@@ -9,7 +9,6 @@ import com.kcibald.services.kcibald.URLKey
 interface PostService : Service {
 
     suspend fun getPostHeadsUnderRegion(regionId: String, queryConfig: QueryConfig): QueryResults<PostHead>?
-    suspend fun getPostsUnderRegion(regionId: String, queryConfig: QueryConfig): QueryResults<PostInfo>?
 
     suspend fun getPostFromId(regionId: String, postId: String): PostInfo?
     suspend fun getPostFromUrlKey(regionId: String, postURLKey: URLKey): PostInfo?
