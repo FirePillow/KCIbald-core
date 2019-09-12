@@ -48,6 +48,7 @@ data class RegionInfo(
 }
 
 data class PostHead(
+    val id: String = "",
     val urlKey: String = "",
     val title: String = "",
     val author: String = "",
@@ -213,27 +214,30 @@ private fun PostHead.protoMergeImpl(plus: PostHead?): PostHead = plus?.copy(
 
 private fun PostHead.protoSizeImpl(): Int {
     var protoSize = 0
-    if (urlKey.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(1) + pbandk.Sizer.stringSize(urlKey)
-    if (title.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(2) + pbandk.Sizer.stringSize(title)
-    if (author.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(3) + pbandk.Sizer.stringSize(author)
-    if (creationTimeStamp != 0L) protoSize += pbandk.Sizer.tagSize(4) + pbandk.Sizer.int64Size(creationTimeStamp)
-    if (content.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(5) + pbandk.Sizer.stringSize(content)
-    if (commentCount != 0) protoSize += pbandk.Sizer.tagSize(6) + pbandk.Sizer.int32Size(commentCount)
+    if (id.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(1) + pbandk.Sizer.stringSize(id)
+    if (urlKey.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(2) + pbandk.Sizer.stringSize(urlKey)
+    if (title.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(3) + pbandk.Sizer.stringSize(title)
+    if (author.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(4) + pbandk.Sizer.stringSize(author)
+    if (creationTimeStamp != 0L) protoSize += pbandk.Sizer.tagSize(5) + pbandk.Sizer.int64Size(creationTimeStamp)
+    if (content.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(6) + pbandk.Sizer.stringSize(content)
+    if (commentCount != 0) protoSize += pbandk.Sizer.tagSize(7) + pbandk.Sizer.int32Size(commentCount)
     protoSize += unknownFields.entries.sumBy { it.value.size() }
     return protoSize
 }
 
 private fun PostHead.protoMarshalImpl(protoMarshal: pbandk.Marshaller) {
-    if (urlKey.isNotEmpty()) protoMarshal.writeTag(10).writeString(urlKey)
-    if (title.isNotEmpty()) protoMarshal.writeTag(18).writeString(title)
-    if (author.isNotEmpty()) protoMarshal.writeTag(26).writeString(author)
-    if (creationTimeStamp != 0L) protoMarshal.writeTag(32).writeInt64(creationTimeStamp)
-    if (content.isNotEmpty()) protoMarshal.writeTag(42).writeString(content)
-    if (commentCount != 0) protoMarshal.writeTag(48).writeInt32(commentCount)
+    if (id.isNotEmpty()) protoMarshal.writeTag(10).writeString(id)
+    if (urlKey.isNotEmpty()) protoMarshal.writeTag(18).writeString(urlKey)
+    if (title.isNotEmpty()) protoMarshal.writeTag(26).writeString(title)
+    if (author.isNotEmpty()) protoMarshal.writeTag(34).writeString(author)
+    if (creationTimeStamp != 0L) protoMarshal.writeTag(40).writeInt64(creationTimeStamp)
+    if (content.isNotEmpty()) protoMarshal.writeTag(50).writeString(content)
+    if (commentCount != 0) protoMarshal.writeTag(56).writeInt32(commentCount)
     if (unknownFields.isNotEmpty()) protoMarshal.writeUnknownFields(unknownFields)
 }
 
 private fun PostHead.Companion.protoUnmarshalImpl(protoUnmarshal: pbandk.Unmarshaller): PostHead {
+    var id = ""
     var urlKey = ""
     var title = ""
     var author = ""
@@ -241,14 +245,17 @@ private fun PostHead.Companion.protoUnmarshalImpl(protoUnmarshal: pbandk.Unmarsh
     var content = ""
     var commentCount = 0
     while (true) when (protoUnmarshal.readTag()) {
-        0 -> return PostHead(urlKey, title, author, creationTimeStamp,
-            content, commentCount, protoUnmarshal.unknownFields())
-        10 -> urlKey = protoUnmarshal.readString()
-        18 -> title = protoUnmarshal.readString()
-        26 -> author = protoUnmarshal.readString()
-        32 -> creationTimeStamp = protoUnmarshal.readInt64()
-        42 -> content = protoUnmarshal.readString()
-        48 -> commentCount = protoUnmarshal.readInt32()
+        0 -> return PostHead(
+            id, urlKey, title, author,
+            creationTimeStamp, content, commentCount, protoUnmarshal.unknownFields()
+        )
+        10 -> id = protoUnmarshal.readString()
+        18 -> urlKey = protoUnmarshal.readString()
+        26 -> title = protoUnmarshal.readString()
+        34 -> author = protoUnmarshal.readString()
+        40 -> creationTimeStamp = protoUnmarshal.readInt64()
+        50 -> content = protoUnmarshal.readString()
+        56 -> commentCount = protoUnmarshal.readInt32()
         else -> protoUnmarshal.unknownField()
     }
 }
