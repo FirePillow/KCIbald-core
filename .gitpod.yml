@@ -1,1 +1,5 @@
 image: gitpod/workspace-mongodb
+vscode:
+  extensions:
+    - mathiasfrohlich.Kotlin@1.7.0:oF7UiPZWRRJLhlhPwYiOmA==
+    - k--kato.intellij-idea-keybindings@0.2.34:xm7MBZmQ/ZRBKi/WZEbH7A==
