@@ -38,6 +38,8 @@ message PostInfo {
     string content = 6;
     int32 commentCount = 7;
     repeated NamedAttachment attachments = 8;
+    repeated CommentInfo comments = 9;
+    string commentQueryMark = 10;
 }
 
 message CommentInfo {

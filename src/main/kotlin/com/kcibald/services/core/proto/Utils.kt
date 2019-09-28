@@ -74,6 +74,8 @@ data class PostInfo(
     val content: String = "",
     val commentCount: Int = 0,
     val attachments: List<com.kcibald.services.core.proto.NamedAttachment> = emptyList(),
+    val comments: List<com.kcibald.services.core.proto.CommentInfo> = emptyList(),
+    val commentQueryMark: String = "",
     val unknownFields: Map<Int, pbandk.UnknownField> = emptyMap()
 ) : pbandk.Message<PostInfo> {
     override operator fun plus(other: PostInfo?) = protoMergeImpl(other)
@@ -262,6 +264,7 @@ private fun PostHead.Companion.protoUnmarshalImpl(protoUnmarshal: pbandk.Unmarsh
 
 private fun PostInfo.protoMergeImpl(plus: PostInfo?): PostInfo = plus?.copy(
     attachments = attachments + plus.attachments,
+    comments = comments + plus.comments,
     unknownFields = unknownFields + plus.unknownFields
 ) ?: this
 
@@ -275,6 +278,8 @@ private fun PostInfo.protoSizeImpl(): Int {
     if (content.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(6) + pbandk.Sizer.stringSize(content)
     if (commentCount != 0) protoSize += pbandk.Sizer.tagSize(7) + pbandk.Sizer.int32Size(commentCount)
     if (attachments.isNotEmpty()) protoSize += (pbandk.Sizer.tagSize(8) * attachments.size) + attachments.sumBy(pbandk.Sizer::messageSize)
+    if (comments.isNotEmpty()) protoSize += (pbandk.Sizer.tagSize(9) * comments.size) + comments.sumBy(pbandk.Sizer::messageSize)
+    if (commentQueryMark.isNotEmpty()) protoSize += pbandk.Sizer.tagSize(10) + pbandk.Sizer.stringSize(commentQueryMark)
     protoSize += unknownFields.entries.sumBy { it.value.size() }
     return protoSize
 }
@@ -288,6 +293,8 @@ private fun PostInfo.protoMarshalImpl(protoMarshal: pbandk.Marshaller) {
     if (content.isNotEmpty()) protoMarshal.writeTag(50).writeString(content)
     if (commentCount != 0) protoMarshal.writeTag(56).writeInt32(commentCount)
     if (attachments.isNotEmpty()) attachments.forEach { protoMarshal.writeTag(66).writeMessage(it) }
+    if (comments.isNotEmpty()) comments.forEach { protoMarshal.writeTag(74).writeMessage(it) }
+    if (commentQueryMark.isNotEmpty()) protoMarshal.writeTag(82).writeString(commentQueryMark)
     if (unknownFields.isNotEmpty()) protoMarshal.writeUnknownFields(unknownFields)
 }
 
@@ -300,17 +307,13 @@ private fun PostInfo.Companion.protoUnmarshalImpl(protoUnmarshal: pbandk.Unmarsh
     var content = ""
     var commentCount = 0
     var attachments: pbandk.ListWithSize.Builder<com.kcibald.services.core.proto.NamedAttachment>? = null
+    var comments: pbandk.ListWithSize.Builder<com.kcibald.services.core.proto.CommentInfo>? = null
+    var commentQueryMark = ""
     while (true) when (protoUnmarshal.readTag()) {
         0 -> return PostInfo(
-            id,
-            urlKey,
-            title,
-            author,
-            creationTimeStamp,
-            content,
-            commentCount,
-            pbandk.ListWithSize.Builder.fixed(attachments),
-            protoUnmarshal.unknownFields()
+            id, urlKey, title, author,
+            creationTimeStamp, content, commentCount, pbandk.ListWithSize.Builder.fixed(attachments),
+            pbandk.ListWithSize.Builder.fixed(comments), commentQueryMark, protoUnmarshal.unknownFields()
         )
         10 -> id = protoUnmarshal.readString()
         18 -> urlKey = protoUnmarshal.readString()
@@ -324,6 +327,9 @@ private fun PostInfo.Companion.protoUnmarshalImpl(protoUnmarshal: pbandk.Unmarsh
             com.kcibald.services.core.proto.NamedAttachment.Companion,
             true
         )
+        74 -> comments =
+            protoUnmarshal.readRepeatedMessage(comments, com.kcibald.services.core.proto.CommentInfo.Companion, true)
+        82 -> commentQueryMark = protoUnmarshal.readString()
         else -> protoUnmarshal.unknownField()
     }
 }
