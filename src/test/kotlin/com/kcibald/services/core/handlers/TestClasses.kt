@@ -45,11 +45,6 @@ internal open class TestCommentService : CommentService {
         queryConfig: QueryConfig
     ): QueryResults<CommentInfo>? = throw AssertionError()
 
-    override suspend fun countCommentsUnderPost(
-        regionId: String,
-        postId: String
-    ): Int? = throw AssertionError()
-
     override suspend fun start() {}
 
     override suspend fun stop() {}

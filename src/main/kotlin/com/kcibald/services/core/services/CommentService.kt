@@ -12,9 +12,4 @@ interface CommentService : Service {
         queryConfig: QueryConfig
     ): QueryResults<CommentInfo>?
 
-    suspend fun countCommentsUnderPost(
-        regionId: String,
-        postId: String
-    ): Int?
-
 }
