@@ -3,9 +3,11 @@ package com.kcibald.services.core.handlers
 import com.kcibald.services.core.QueryResults
 import com.kcibald.services.core.proto.*
 import com.kcibald.services.kcibald.URLKey
+import io.vertx.core.Future
+import io.vertx.core.MultiMap
 import io.vertx.core.Vertx
+import io.vertx.core.eventbus.DeliveryOptions
 import io.vertx.core.eventbus.Message
-import io.vertx.core.eventbus.impl.MessageImpl
 import io.vertx.junit5.VertxExtension
 import io.vertx.kotlin.core.eventbus.requestAwait
 import kotlinx.coroutines.runBlocking
@@ -332,7 +334,24 @@ internal class DescribePostInterfaceTest {
                     TestPostService(),
                     TestCommentService()
                 ),
-                MessageImpl<ByteArray, Unit>() as Message<ByteArray>,
+                object : Message<ByteArray> {
+                    override fun replyAddress(): String = fail()
+
+                    override fun isSend(): Boolean = fail()
+
+                    override fun body(): ByteArray = ByteArray(0)
+
+                    override fun address(): String = fail()
+
+                    override fun reply(message: Any?, options: DeliveryOptions?) {}
+
+                    override fun headers(): MultiMap = fail()
+
+                    override fun <R : Any?> replyAndRequest(
+                        message: Any?,
+                        options: DeliveryOptions?
+                    ): Future<Message<R>> = fail()
+                },
                 Throwable()
             )
         )
